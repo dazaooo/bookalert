@@ -22,9 +22,7 @@ def init():
         print(saturdayTimestap)
 
     else:
-        print('当前不是周六')
-        print('脚本启动，将继续检测')
-        return
+        print('脚本启动，持续检测')
 
     schedule.every(10).seconds.do(requestPlace)
 
@@ -40,7 +38,7 @@ def requestPlace():
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
 
-    timeLocal = time.localtime(1642348800)
+    timeLocal = time.localtime(saturdayTimestap)
     realTime = time.strftime("%Y-%m-%d", timeLocal)
 
     print(realTime)
@@ -54,6 +52,7 @@ def requestPlace():
         if name:
             infolist.append({"name": name, "timestart": timestart, "timeend": timeend})
 
+    # 向zdz索取
     url = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=robot.key'
 
     headers = {'content-type': "application/json", 'Authorization': 'APP appid = **,token = **'} 
@@ -76,3 +75,5 @@ def requestPlace():
     }
 
     wechatresponse = requests.post(url, data = json.dumps(body), headers = headers)
+
+init()
